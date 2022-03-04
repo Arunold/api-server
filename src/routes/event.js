@@ -49,7 +49,6 @@ router.delete('/:id', async (req, res) => {
     res.json(events);
 });
 
-
 /**
  * PUT /api/event/like/:id
  * Increases likes for the event referenced by the value substituted for :id
@@ -58,9 +57,32 @@ router.delete('/:id', async (req, res) => {
  * Returns the likes count of the event
  */
 router.put('/like/:id', async (req, res) => {
-    const likes = await db.likeEvent(req.params.id);
+    const likes = await db.changeReaction(req.params.id, 'likes');
     res.json(likes);
 });
 
+/**
+ * PUT /api/event/dislike/:id
+ * Increases dislikes for the event referenced by the value substituted for :id
+ * For example: /api/event/dislike/1 will decreament one like for the event with the id = 1
+ * 
+ * Returns the likes count of the event
+ */
+router.put('/dislike/:id', async (req, res) => {
+    const likes = await db.changeReaction(req.params.id, 'dislike');
+    res.json(likes);
+});
+
+/**
+ * PUT /api/event/:id/reactionType
+ * Increases likes for the event referenced by the value substituted for :id
+ * For example: /api/event/1/likes will increase one like for the event with the id = 1
+ * 
+ * Returns the likes count of the event
+ */
+router.put('/:id/:reactionType', async (req, res) => {
+    const likes = await db.changeReaction(req.params.id, req.params.reactionType);
+    res.json(likes);
+});
 
 module.exports = router;
